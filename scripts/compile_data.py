@@ -6,16 +6,14 @@ import os
 
 
 XML_FOLDER_PATH = "../data/dataset/"
-
-
-def retrieve_xml_file_paths(folder_path: str) -> [Path]:
-    """
-    Retrieve all the xml files in the given folder_path
-    :param folder_path: the path to the folder containing the xml files
-    :return: A list of the xml file paths in the given folder_path
-    """
-    path = Path(folder_path)
-    return [i for i in path.glob("*.xml")]
+xml_files_and_git_repo = {
+    'Birt.xml': "https://git.eclipse.org/r/p/birt/org.eclipse.birt",
+    'Eclipse_Platform_UI.xml': "https://git.eclipse.org/r/p/platform/eclipse.platform.ui",
+    'AspectJ.xml': "git://git.eclipse.org/gitroot/aspectj/org.aspectj.git",
+    'JDT.xml': "https://git.eclipse.org/r/p/jdt/eclipse.jdt.ui",
+    'SWT.xml': "https://git.eclipse.org/r/p/platform/eclipse.platform.swt",
+    'Tomcat.xml': "git://git.apache.org/tomcat.git"
+}
 
 
 def retrieve_bug_reports(xml_file_path: Path) -> [dict]:
@@ -35,12 +33,18 @@ def retrieve_bug_reports(xml_file_path: Path) -> [dict]:
     return bug_reports
 
 
-def retrieve_file_at_commit(repo_path: Path, commit_sha: str) -> dict:
+def retrieve_file_at_commit(repo_url: Path, commit_sha: str) -> dict:
     ...
 
 
 if __name__ == "__main__":
     sample_file_path = os.path.join(XML_FOLDER_PATH, "AspectJ.xml")
     sample_file_path = Path(sample_file_path)
-    retrieve_bug_reports(sample_file_path)
+    reports: [dict] = retrieve_bug_reports(sample_file_path)
+    resolved_categories = set(report["status"] for report in reports)
 
+    def count_frequency(category: str) -> int:
+        return sum(report["status"] == category for report in reports)
+
+    resolved_frequencies = {cat: count_frequency(cat) for cat in resolved_categories}
+    pprint(resolved_frequencies)
