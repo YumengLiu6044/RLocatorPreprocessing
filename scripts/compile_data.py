@@ -1,4 +1,5 @@
 from git import Repo
+import pandas as pd
 from xml.etree import ElementTree
 from pathlib import Path
 from pprint import pprint
@@ -16,7 +17,7 @@ xml_files_and_git_repo = {
 }
 
 
-def retrieve_bug_reports(xml_file_path: Path) -> [dict]:
+def retrieve_bug_reports(xml_file_path: Path) -> pd.DataFrame:
     """
     Retrieve the bug reports from the given xml file
     :param xml_file_path: Path object to the xml file
@@ -30,7 +31,7 @@ def retrieve_bug_reports(xml_file_path: Path) -> [dict]:
         }
         bug_reports.append(table_dict)
 
-    return bug_reports
+    return pd.DataFrame(bug_reports)
 
 
 def retrieve_file_at_commit(repo_url: Path, commit_sha: str) -> dict:
@@ -40,11 +41,4 @@ def retrieve_file_at_commit(repo_url: Path, commit_sha: str) -> dict:
 if __name__ == "__main__":
     sample_file_path = os.path.join(XML_FOLDER_PATH, "AspectJ.xml")
     sample_file_path = Path(sample_file_path)
-    reports: [dict] = retrieve_bug_reports(sample_file_path)
-    resolved_categories = set(report["status"] for report in reports)
-
-    def count_frequency(category: str) -> int:
-        return sum(report["status"] == category for report in reports)
-
-    resolved_frequencies = {cat: count_frequency(cat) for cat in resolved_categories}
-    pprint(resolved_frequencies)
+    reports = retrieve_bug_reports(sample_file_path)
