@@ -6,7 +6,7 @@ import re
 from zipfile import ZipFile, ZIP_DEFLATED
 from tqdm import tqdm
 
-DATA_FOLDER_PATH = "/kaggle/input/bug-report-data/dataset"
+DATA_FOLDER_PATH = "data/dataset"
 project_repo_mapping = {
     'Birt.xml': "birt_repo",
     'Eclipse_Platform_UI.xml': "eclipse_ui_repo",
